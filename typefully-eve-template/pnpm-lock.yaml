@@ -13,13 +13,13 @@ importers:
         version: 2.6.1
       '@vercel/connect':
         specifier: 0.4.0
-        version: 0.4.0(ai@7.0.57(zod@4.4.3))(eve@0.31.1(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2))
+        version: 0.4.0(ai@7.0.57(zod@4.4.3))(eve@0.31.3(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2))
       ai:
         specifier: ^7.0.38
         version: 7.0.57(zod@4.4.3)
       eve:
-        specifier: 0.31.1
-        version: 0.31.1(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2)
+        specifier: ^0.31.2
+        version: 0.31.3(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -652,8 +652,8 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
-  eve@0.31.1:
-    resolution: {integrity: sha512-ozN3p0LkZi8dRY7ffqx+uTRP+k/GKR8w0IK6YwWG0b1Z4cB+BWDvHaZv7sGe/+AlK+JWCJMXg9Hj+8Lmg3Y0Kg==}
+  eve@0.31.3:
+    resolution: {integrity: sha512-/ae8kfsVLGoy68BU+7uNEkXeEQzOHWaXi0Q+Fj5oA2On5POcU0DGR9AnZlOaDQoFLoEtMxRnR1urTw4H0U2O7Q==}
     engines: {node: '>=24'}
     hasBin: true
     peerDependencies:
@@ -1486,12 +1486,12 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/connect@0.4.0(ai@7.0.57(zod@4.4.3))(eve@0.31.1(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2))':
+  '@vercel/connect@0.4.0(ai@7.0.57(zod@4.4.3))(eve@0.31.3(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2))':
     dependencies:
       '@vercel/oidc': 3.8.0
     optionalDependencies:
       ai: 7.0.57(zod@4.4.3)
-      eve: 0.31.1(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2)
+      eve: 0.31.3(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2)
 
   '@vercel/oidc@3.2.0': {}
 
@@ -1632,7 +1632,7 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  eve@0.31.1(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2):
+  eve@0.31.3(@vercel/blob@2.6.1)(ai@7.0.57(zod@4.4.3))(lru-cache@11.5.2):
     dependencies:
       ai: 7.0.57(zod@4.4.3)
       nitro: 3.0.260610-beta(@vercel/blob@2.6.1)(lru-cache@11.5.2)
