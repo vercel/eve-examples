@@ -1,0 +1,4 @@
+allowBuilds:
+  sharp: true
+minimumReleaseAgeExclude:
+  - eve@0.31.1 || 0.31.2

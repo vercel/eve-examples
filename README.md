@@ -11,3 +11,4 @@ upstream repository and imported here as a detached subdirectory.
 | Sanity Copilot | [`sanity-copilot-eve-template`](./sanity-copilot-eve-template) | [vercel-labs/sanity-copilot-eve-template](https://github.com/vercel-labs/sanity-copilot-eve-template) | `f076b80` |
 | Chat Template | [`eve-chat-template`](./eve-chat-template) | [vercel-labs/eve-chat-template](https://github.com/vercel-labs/eve-chat-template) | `4792ac1` |
 | Typefully Agent | [`typefully-eve-template`](./typefully-eve-template) | [vercel-labs/typefully-eve-template](https://github.com/vercel-labs/typefully-eve-template) | `3627b22` |
+| LLM Council | [`eve-llm-council-template`](./eve-llm-council-template) | [vercel-labs/eve-llm-council](https://github.com/vercel-labs/eve-llm-council) | `b591cd7` |
