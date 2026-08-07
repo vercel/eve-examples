@@ -1,0 +1,31 @@
+{
+  "name": "eve-llm-council-template",
+  "version": "0.0.0",
+  "type": "module",
+  "imports": {
+    "#*": "./agent/*",
+    "#evals/*": "./evals/*"
+  },
+  "scripts": {
+    "build": "eve build && next build",
+    "dev": "next dev",
+    "start": "next start",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@comark/react": "0.5.1",
+    "ai": "^7.0.38",
+    "eve": "^0.31.2",
+    "geist": "1.7.2",
+    "next": "16.3.0-canary.106",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "~26.1.2",
+    "@types/react": "~19.2.15",
+    "@types/react-dom": "~19.2.3",
+    "typescript": "7.0.2"
+  }
+}
