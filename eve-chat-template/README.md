@@ -2,7 +2,7 @@
 
 A Next.js chat template for [eve](https://eve.dev) that starts with password access and browser-persisted chats, then upgrades to Sign in with Vercel, Neon, and Upstash when you need a production multi-user application.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=eve-chat-template&repository-name=eve-chat-template&repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Feve-chat-template%2Ftree%2Fmain&env=EVE_CHAT_PASSWORD&envDescription=Choose+a+strong+password+to+protect+your+agent+%2816%2B+characters+recommended%29.&envLink=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Feve-chat-template%2Fblob%2Fmain%2Fdocs%2Fsetup-and-deploy.md)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=eve-chat-template&repository-name=eve-chat-template&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Feve-chat-template&env=EVE_CHAT_PASSWORD&envDescription=Choose+a+strong+password+to+protect+your+agent+%2816%2B+characters+recommended%29.&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Fblob%2Fmain%2Feve-chat-template%2Fdocs%2Fsetup-and-deploy.md)
 
 ## Quick Start
 

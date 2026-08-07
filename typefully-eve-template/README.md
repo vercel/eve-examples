@@ -13,7 +13,7 @@ A Slack-based social media agent built on [eve](https://eve.dev). Team members @
 
 ## Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=typefully-eve-template&repository-name=typefully-eve-template&repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Ftypefully-eve-template%2Ftree%2Fmain&env=TYPEFULLY_API_KEY&envDescription=Your%20Typefully%20API%20key%20%28Settings%20%3E%20API%29&connect=%5B%7B%22type%22%3A%22slack%22%2C%22env%22%3A%22SLACK_CONNECTOR%22%2C%22triggers%22%3Atrue%2C%22triggerPath%22%3A%22%2Feve%2Fv1%2Fslack%22%7D%2C%7B%22type%22%3A%22notion%22%2C%22env%22%3A%22NOTION_CONNECTOR%22%2C%22method%22%3A%22mcp%22%7D%5D&stores=%5B%7B%22type%22%3A%22blob%22%2C%22access%22%3A%22public%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=typefully-eve-template&repository-name=typefully-eve-template&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Ftypefully-eve-template&env=TYPEFULLY_API_KEY&envDescription=Your%20Typefully%20API%20key%20%28Settings%20%3E%20API%29&connect=%5B%7B%22type%22%3A%22slack%22%2C%22env%22%3A%22SLACK_CONNECTOR%22%2C%22triggers%22%3Atrue%2C%22triggerPath%22%3A%22%2Feve%2Fv1%2Fslack%22%7D%2C%7B%22type%22%3A%22notion%22%2C%22env%22%3A%22NOTION_CONNECTOR%22%2C%22method%22%3A%22mcp%22%7D%5D&stores=%5B%7B%22type%22%3A%22blob%22%2C%22access%22%3A%22public%22%7D%5D)
 
 Deploying with the button provisions everything the agent needs and wires it up for you:
 
