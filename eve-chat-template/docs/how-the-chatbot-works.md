@@ -58,7 +58,7 @@ Important files:
 There are two related but separate concepts:
 
 1. A **local app chat**, represented by a browser-storage record or a row in the `chat` table.
-2. An **eve session**, represented by eve's `SessionState` and remote session
+2. An **eve session**, represented by eve's `ClientSessionState` and remote session
    stream.
 
 The app chat gives the user a stable URL such as `/chat/abc`, a sidebar title,
@@ -69,14 +69,14 @@ follow-up input.
 Production mode stores eve session state on the chat row:
 
 ```ts
-chat.eveSession: SessionState | null
+chat.eveSession: ClientSessionState | null
 ```
 
 Production mode stores eve stream events in ordered rows:
 
 ```ts
 chat_event.eventIndex: number
-chat_event.event: HandleMessageStreamEvent
+chat_event.event: MessageStreamEvent
 ```
 
 Starter mode keeps the same two values in a versioned localStorage record.
@@ -290,19 +290,19 @@ The browser session object is created by `createPersistedClientSession`.
 
 It exposes:
 
-- `send(input)`
+- `send(message, options)`
+- `respond(inputResponses, options)`
 - `stream(options)`
-- `applyLocalEvents(events)`
 - `setState(nextSession)`
 - `state`
 
-When `send(input)` is called:
+When `send(message, options)` or `respond(inputResponses, options)` is called:
 
-1. It normalizes the input.
+1. It builds the matching message or input-response payload.
 2. It posts to `/eve/v1/session` for a new eve session, or
    `/eve/v1/session/:sessionId` for a continuation.
 3. It reads the `x-eve-session-id` response header.
-4. It updates the local `SessionState`.
+4. It updates the local `ClientSessionState`.
 5. It saves that session state to the chat row.
 6. It returns a browser-compatible message response whose async iterator reads
    `/eve/v1/session/:sessionId/stream`.
@@ -366,7 +366,7 @@ The intended order is:
 4. Render an optimistic user bubble immediately when possible.
 5. Run `prepareSend(message)`.
 6. Mark the chat row with `pendingUserMessage`.
-7. Call `agent.send({ message, clientContext })`.
+7. Call `agent.send(message, { clientContext })`.
 8. Let `useEveAgent`, `onEvent`, and `onFinish` handle streaming and
    persistence.
 
@@ -418,7 +418,7 @@ When `useEveAgent` finishes a turn, it calls `onFinish(snapshot)`.
 The snapshot includes:
 
 - the full reduced event list known by eve React
-- the current eve `SessionState`
+- the current eve `ClientSessionState`
 
 The template calls `saveChatSnapshotAction({ chatId, events, session })`.
 

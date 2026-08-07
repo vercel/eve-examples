@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { and, asc, desc, eq, gte, lt, or, sql } from "drizzle-orm";
-import type { HandleMessageStreamEvent, SessionState } from "eve/client";
+import type { ClientSessionState, MessageStreamEvent } from "eve/client";
 import { isChatTurnSettledEvent } from "@/lib/chat/events";
 import type { ActiveChat, ChatListItem, ChatListPage } from "@/lib/chat/types";
 import { createFallbackTitle, DEFAULT_CHAT_TITLE } from "@/lib/chat/title";
@@ -228,8 +228,8 @@ export async function skipChatAuthorization({
   userId,
 }: {
   readonly chatId: string;
-  readonly events: readonly HandleMessageStreamEvent[];
-  readonly session: SessionState;
+  readonly events: readonly MessageStreamEvent[];
+  readonly session: ClientSessionState | undefined;
   readonly userId: string;
 }) {
   if (events.length === 0) {
@@ -272,7 +272,7 @@ export async function skipChatAuthorization({
   const [row] = await db
     .update(chat)
     .set({
-      eveSession: session,
+      eveSession: session ?? null,
       pendingUserMessage: null,
       pendingUserMessageCreatedAt: null,
       updatedAt: new Date(),
@@ -305,7 +305,7 @@ export async function saveChatSessionState({
   userId,
 }: {
   readonly chatId: string;
-  readonly session: SessionState;
+  readonly session: ClientSessionState;
   readonly userId: string;
 }) {
   await db
@@ -323,7 +323,7 @@ export async function appendChatEvent({
   userId,
 }: {
   readonly chatId: string;
-  readonly event: HandleMessageStreamEvent;
+  readonly event: MessageStreamEvent;
   readonly eventIndex: number;
   readonly userId: string;
 }) {
@@ -358,8 +358,8 @@ export async function saveChatSnapshot({
   userId,
 }: {
   readonly chatId: string;
-  readonly events: readonly HandleMessageStreamEvent[];
-  readonly session: SessionState;
+  readonly events: readonly MessageStreamEvent[];
+  readonly session: ClientSessionState | undefined;
   readonly userId: string;
 }) {
   const [ownedChat] = await db
@@ -396,7 +396,7 @@ export async function saveChatSnapshot({
   await db
     .update(chat)
     .set({
-      eveSession: session,
+      eveSession: session ?? null,
       pendingUserMessage: null,
       pendingUserMessageCreatedAt: null,
       updatedAt: new Date(),

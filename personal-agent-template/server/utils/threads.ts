@@ -23,13 +23,12 @@ function serializeThreadState(state: ThreadState | undefined) {
   return state ? JSON.stringify(state) : null;
 }
 
-function mergeThreadState(existing: ThreadState | null, incoming: ThreadState): ThreadState {
+function mergeThreadState(incoming: ThreadState): ThreadState {
   const session = incoming.session;
 
   return {
     session: {
-      sessionId: session.sessionId ?? existing?.session.sessionId,
-      continuationToken: session.continuationToken ?? existing?.session.continuationToken,
+      sessionId: session.sessionId,
       streamIndex: session.streamIndex,
     },
     events: incoming.events,
@@ -116,7 +115,7 @@ export async function updateThreadForUser(
       updatedAt: new Date(),
       ...(patch.title !== undefined ? { title: truncateThreadTitle(patch.title) } : {}),
       ...(patch.state !== undefined
-        ? { state: serializeThreadState(mergeThreadState(existing.state, patch.state)) }
+        ? { state: serializeThreadState(mergeThreadState(patch.state)) }
         : {}),
     })
     .where(and(
