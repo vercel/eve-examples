@@ -1,6 +1,6 @@
 "use client";
 
-import type { HandleMessageStreamEvent, SessionState } from "eve/client";
+import type { ClientSessionState, MessageStreamEvent } from "eve/client";
 import {
   appendChatEventAction,
   checkSendLimitAction,
@@ -100,7 +100,7 @@ export async function appendClientChatEvent(
   storageMode: StorageMode,
   input: {
     readonly chatId: string;
-    readonly event: HandleMessageStreamEvent;
+    readonly event: MessageStreamEvent;
     readonly eventIndex: number;
   },
 ) {
@@ -114,7 +114,7 @@ export async function appendClientChatEvent(
 
 export async function saveClientChatSession(
   storageMode: StorageMode,
-  input: { readonly chatId: string; readonly session: SessionState },
+  input: { readonly chatId: string; readonly session: ClientSessionState },
 ) {
   if (storageMode === "browser") {
     saveLocalChatSession(input.chatId, input.session);
@@ -128,8 +128,8 @@ export async function saveClientChatSnapshot(
   storageMode: StorageMode,
   input: {
     readonly chatId: string;
-    readonly events: readonly HandleMessageStreamEvent[];
-    readonly session: SessionState;
+    readonly events: readonly MessageStreamEvent[];
+    readonly session: ClientSessionState | undefined;
   },
 ) {
   if (storageMode === "browser") {
@@ -144,8 +144,8 @@ export async function skipClientChatAuthorization(
   storageMode: StorageMode,
   input: {
     readonly chatId: string;
-    readonly events: readonly HandleMessageStreamEvent[];
-    readonly session: SessionState;
+    readonly events: readonly MessageStreamEvent[];
+    readonly session: ClientSessionState | undefined;
   },
 ) {
   return storageMode === "browser"

@@ -9,13 +9,15 @@ export function resumeOptionsFromThread(thread: ThreadRecord): ChatSessionOption
     return {};
   }
 
-  const session = thread.state?.session ?? { streamIndex: 0 };
+  const session = thread.state?.session;
 
   return {
-    initialSession: {
-      ...session,
-      streamIndex: Math.max(session.streamIndex ?? 0, events.length),
-    },
+    initialSession: session?.sessionId
+      ? {
+          sessionId: session.sessionId,
+          streamIndex: Math.max(session.streamIndex ?? 0, events.length),
+        }
+      : undefined,
     initialEvents: events as readonly EveStreamEvent[],
   };
 }
@@ -24,15 +26,14 @@ export async function persistThreadState(
   threadId: string,
   snapshot: UseEveAgentSnapshot<EveMessageData>,
 ) {
-  if (!snapshot.events.length) {
+  if (!snapshot.events.length || !snapshot.session) {
     return;
   }
 
   const state: ThreadState = {
     session: {
       sessionId: snapshot.session.sessionId,
-      continuationToken: snapshot.session.continuationToken,
-      streamIndex: snapshot.events.length,
+      streamIndex: snapshot.session.streamIndex,
     },
     events: [...snapshot.events],
   };

@@ -43,13 +43,13 @@ importers:
         version: 2.0.1(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       '@vercel/connect':
         specifier: 0.2.4
-        version: 0.2.4(ai@7.0.0-canary.171(zod@4.4.3))(better-auth@1.5.5(drizzle-kit@0.31.9)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(mongodb@7.3.0)(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(eve@0.22.1(@upstash/redis@1.38.0)(ai@7.0.0-canary.171(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0))
+        version: 0.2.4(ai@7.0.38(zod@4.4.3))(better-auth@1.5.5(drizzle-kit@0.31.9)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(mongodb@7.3.0)(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(eve@0.31.1(@upstash/redis@1.38.0)(ai@7.0.38(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0))
       '@vercel/speed-insights':
         specifier: 2.0.0
         version: 2.0.0(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
       ai:
-        specifier: 7.0.0-canary.171
-        version: 7.0.0-canary.171(zod@4.4.3)
+        specifier: 7.0.38
+        version: 7.0.38(zod@4.4.3)
       better-auth:
         specifier: 1.5.5
         version: 1.5.5(drizzle-kit@0.31.9)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(mongodb@7.3.0)(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -66,8 +66,8 @@ importers:
         specifier: 0.45.1
         version: 0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17)
       eve:
-        specifier: ^0.22.1
-        version: 0.22.1(@upstash/redis@1.38.0)(ai@7.0.0-canary.171(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0)
+        specifier: 0.31.1
+        version: 0.31.1(@upstash/redis@1.38.0)(ai@7.0.38(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0)
       lucide-react:
         specifier: 1.16.0
         version: 1.16.0(react@19.2.6)
@@ -126,20 +126,20 @@ importers:
 
 packages:
 
-  '@ai-sdk/gateway@4.0.0-canary.103':
-    resolution: {integrity: sha512-VsQ356y4PArx1IYMZ6tmbYGLN00jm9onOtb9pTxNYtk8OpU5E5VKc8r8Unj5Lg6tA+zhKnPC1pLPjvt4EUqdKQ==}
+  '@ai-sdk/gateway@4.0.29':
+    resolution: {integrity: sha512-x63ILOnzMjbavVb55ckuoQLZB8KTdrJFzk3nSt1QbecokLac4FGEYQDUKQSvRV93lFWol+8tr0ZR+IHWhGtmJw==}
     engines: {node: '>=22'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  '@ai-sdk/provider-utils@5.0.0-canary.47':
-    resolution: {integrity: sha512-LapFiHRNhQxbuZSdYcRJZbJ3h4etm+VcEYCkvrI4DwteyvAHvmHPqabrXykgxmDJRKJ0VfJDnj1uzHABES7h9A==}
+  '@ai-sdk/provider-utils@5.0.13':
+    resolution: {integrity: sha512-fScDJMDnTbx32kLDQqp0MvPjvwkgiwvlBxlmIg7XW5PbS91LG6JjH3PQG+34oMFglqfpQA355e24OdGj5PPoDw==}
     engines: {node: '>=22'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  '@ai-sdk/provider@4.0.0-canary.18':
-    resolution: {integrity: sha512-+XBwXEPkN+l/90bb7TaSK15jAq9ScsGrauJ/NLSGip0KX5Mf1pfEfqBWDuJMIYVRYHNdV1dDBy7JCoKUCQe/tA==}
+  '@ai-sdk/provider@4.0.4':
+    resolution: {integrity: sha512-tbHKNLirllUNF3ZlkCsXnwab2ZV1Sl4b1H/Cp9ruCce15IBmskE8Gwkk0yo9xDWY+jho2of7lVXtwSsyrq7cwQ==}
     engines: {node: '>=22'}
 
   '@alloc/quick-lru@5.2.0':
@@ -2218,8 +2218,8 @@ packages:
   '@workflow/serde@4.1.0':
     resolution: {integrity: sha512-pav4F2BoirECWR7Nf1TKt+2eETcBj7jj4cBefQ8VXQCA6NPkaKeLfj/zMgi+3zYV5ZIBT4GuUiphsj0/b9hPQQ==}
 
-  ai@7.0.0-canary.171:
-    resolution: {integrity: sha512-9idMcZNoAFwMksgq1riDPGbuGDVT/9PbRjDmgR5lis67uN/wd9bNFDhtfwi6BtiAMs3aeZbsLwoOdCncjVgtBA==}
+  ai@7.0.38:
+    resolution: {integrity: sha512-14biRrfd9lGNBT1rNw3QkQs4VDI6u7iBaw6TesP7r09GH4FFY+l22qkza5gQzzSNp/+nn8AM0+q8br0W72nLhQ==}
     engines: {node: '>=22'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -2747,13 +2747,13 @@ packages:
   estree-util-is-identifier-name@3.0.0:
     resolution: {integrity: sha512-hFtqIDZTIUZ9BXLb8y4pYGyk6+wekIivNVTcmvk8NoOh+VeRn5y6cEHzbURrWbfp1fIqdVipilzj+lfaadNZmg==}
 
-  eve@0.22.1:
-    resolution: {integrity: sha512-4nqy8SEJpS94fM8sxd0Or+irvf/CmS0qENxouKyyegst3Qtn06xZbuSEoI1p7i4wB6sprr95udXh7Ulct6ABrA==}
+  eve@0.31.1:
+    resolution: {integrity: sha512-ozN3p0LkZi8dRY7ffqx+uTRP+k/GKR8w0IK6YwWG0b1Z4cB+BWDvHaZv7sGe/+AlK+JWCJMXg9Hj+8Lmg3Y0Kg==}
     engines: {node: '>=24'}
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
-      ai: ^7.0.0
+      ai: ^7.0.38
       braintrust: ^3.0.0
       just-bash: ^3.0.0
       microsandbox: ^0.5.0
@@ -3704,6 +3704,10 @@ packages:
   undici-types@7.24.6:
     resolution: {integrity: sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==}
 
+  undici@8.9.0:
+    resolution: {integrity: sha512-aWZpUj7XoGonMClx4gdDRfgBjqeA+F473aDmROQQbM9n6PRfK/u1q/a0X4wMTgcHfT8H6fpbt98PFuDUwFg2YA==}
+    engines: {node: '>=22.19.0'}
+
   unenv@2.0.0-rc.24:
     resolution: {integrity: sha512-i7qRCmY42zmCwnYlh9H2SvLEypEFGye5iRmEMKjcGi7zk9UquigRjFtTLz0TYqr0ZGLZhaMHl/foy1bZR+Cwlw==}
 
@@ -3887,22 +3891,22 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/gateway@4.0.0-canary.103(zod@4.4.3)':
+  '@ai-sdk/gateway@4.0.29(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 4.0.0-canary.18
-      '@ai-sdk/provider-utils': 5.0.0-canary.47(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.4
+      '@ai-sdk/provider-utils': 5.0.13(zod@4.4.3)
       '@vercel/oidc': 3.2.0
       zod: 4.4.3
 
-  '@ai-sdk/provider-utils@5.0.0-canary.47(zod@4.4.3)':
+  '@ai-sdk/provider-utils@5.0.13(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 4.0.0-canary.18
+      '@ai-sdk/provider': 4.0.4
       '@standard-schema/spec': 1.1.0
       '@workflow/serde': 4.1.0
       eventsource-parser: 3.1.0
       zod: 4.4.3
 
-  '@ai-sdk/provider@4.0.0-canary.18':
+  '@ai-sdk/provider@4.0.4':
     dependencies:
       json-schema: 0.4.0
 
@@ -5696,13 +5700,13 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/connect@0.2.4(ai@7.0.0-canary.171(zod@4.4.3))(better-auth@1.5.5(drizzle-kit@0.31.9)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(mongodb@7.3.0)(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(eve@0.22.1(@upstash/redis@1.38.0)(ai@7.0.0-canary.171(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0))':
+  '@vercel/connect@0.2.4(ai@7.0.38(zod@4.4.3))(better-auth@1.5.5(drizzle-kit@0.31.9)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(mongodb@7.3.0)(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(eve@0.31.1(@upstash/redis@1.38.0)(ai@7.0.38(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0))':
     dependencies:
       '@vercel/oidc': 3.6.1
     optionalDependencies:
-      ai: 7.0.0-canary.171(zod@4.4.3)
+      ai: 7.0.38(zod@4.4.3)
       better-auth: 1.5.5(drizzle-kit@0.31.9)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(mongodb@7.3.0)(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      eve: 0.22.1(@upstash/redis@1.38.0)(ai@7.0.0-canary.171(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0)
+      eve: 0.31.1(@upstash/redis@1.38.0)(ai@7.0.38(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0)
 
   '@vercel/oidc@3.2.0': {}
 
@@ -5719,11 +5723,11 @@ snapshots:
 
   '@workflow/serde@4.1.0': {}
 
-  ai@7.0.0-canary.171(zod@4.4.3):
+  ai@7.0.38(zod@4.4.3):
     dependencies:
-      '@ai-sdk/gateway': 4.0.0-canary.103(zod@4.4.3)
-      '@ai-sdk/provider': 4.0.0-canary.18
-      '@ai-sdk/provider-utils': 5.0.0-canary.47(zod@4.4.3)
+      '@ai-sdk/gateway': 4.0.29(zod@4.4.3)
+      '@ai-sdk/provider': 4.0.4
+      '@ai-sdk/provider-utils': 5.0.13(zod@4.4.3)
       zod: 4.4.3
 
   aria-hidden@1.2.6:
@@ -6151,10 +6155,11 @@ snapshots:
 
   estree-util-is-identifier-name@3.0.0: {}
 
-  eve@0.22.1(@upstash/redis@1.38.0)(ai@7.0.0-canary.171(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0):
+  eve@0.31.1(@upstash/redis@1.38.0)(ai@7.0.38(zod@4.4.3))(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(microsandbox@0.5.7)(mongodb@7.3.0):
     dependencies:
-      ai: 7.0.0-canary.171(zod@4.4.3)
+      ai: 7.0.38(zod@4.4.3)
       nitro: 3.0.260610-beta(@upstash/redis@1.38.0)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.28.17))(jiti@2.7.0)(mongodb@7.3.0)
+      undici: 8.9.0
     optionalDependencies:
       microsandbox: 0.5.7
     transitivePeerDependencies:
@@ -7530,6 +7535,8 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici-types@7.24.6: {}
+
+  undici@8.9.0: {}
 
   unenv@2.0.0-rc.24:
     dependencies:

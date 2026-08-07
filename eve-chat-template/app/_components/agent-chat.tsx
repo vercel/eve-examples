@@ -3,11 +3,13 @@
 import type {
   AuthorizationRequiredStreamEvent,
   ClientSession,
+  ClientSessionState,
   EveAgentStoreSnapshot,
   EveMessageData,
-  HandleMessageStreamEvent,
+  MessageStreamEvent,
+  RespondTurnOptions,
   SendTurnInput,
-  SessionState,
+  SendTurnOptions,
 } from "eve/client";
 import type { EveMessage } from "eve/react";
 import { defaultMessageReducer, useEveAgent } from "eve/react";
@@ -50,11 +52,22 @@ import type { ActiveChat, SetupStatus, Viewer } from "@/lib/chat/types";
 import { cn } from "@/lib/utils";
 
 type AgentSnapshot = EveAgentStoreSnapshot<EveMessageData>;
-type PersistedClientSession = ClientSession & {
-  readonly state: SessionState;
-  applyLocalEvents: (events: readonly HandleMessageStreamEvent[]) => SessionState;
-  setState: (session: SessionState) => void;
+type PersistedClientSession = {
+  readonly state: ClientSessionState | undefined;
+  readonly respond: ClientSession["respond"];
+  readonly send: ClientSession["send"];
+  setState: (session: ClientSessionState | undefined) => void;
+  stream: (options?: StreamSessionOptions) => AsyncIterable<MessageStreamEvent>;
 };
+type BrowserTurnInput =
+  | (SendTurnOptions & {
+      readonly inputResponses?: never;
+      readonly message: SendTurnInput["message"];
+    })
+  | (RespondTurnOptions & {
+      readonly inputResponses: Parameters<ClientSession["respond"]>[0];
+      readonly message?: never;
+    });
 type StreamSessionOptions = {
   readonly ignoreLeadingWaiting?: boolean;
   readonly signal?: AbortSignal;
@@ -97,68 +110,71 @@ function createPersistedClientSession({
   initialSession,
   onSessionStarted,
 }: {
-  readonly initialSession?: SessionState;
-  readonly onSessionStarted: (session: SessionState) => Promise<void> | void;
+  readonly initialSession?: ClientSessionState;
+  readonly onSessionStarted: (session: ClientSessionState) => Promise<void> | void;
 }) {
-  let session = initialSession ?? createInitialSessionState();
+  let session = initialSession;
+
+  const dispatch = async (input: BrowserTurnInput) => {
+    const previousSession = session;
+    const response = await postSessionTurn(previousSession, input);
+    const startedSession: ClientSessionState = {
+      sessionId: response.sessionId,
+      streamIndex:
+        previousSession?.sessionId === response.sessionId ? previousSession.streamIndex : 0,
+    };
+
+    session = startedSession;
+
+    await onSessionStarted(startedSession);
+
+    return createBrowserMessageResponse({
+      ignoreLeadingWaiting:
+        previousSession !== undefined &&
+        previousSession.sessionId === response.sessionId &&
+        startedSession.streamIndex > 0,
+      onFinalize: (events) => {
+        session = advanceBrowserSession({
+          baseStreamIndex: startedSession.streamIndex,
+          events,
+          sessionId: response.sessionId,
+        });
+      },
+      sessionId: response.sessionId,
+      signal: input.signal,
+      startIndex: startedSession.streamIndex,
+    });
+  };
 
   return {
     get state() {
       return session;
     },
-    async send(input: SendTurnInput) {
-      const previousSession = session;
-      const normalizedInput = normalizeSendInput(input);
-      const response = await postSessionTurn(previousSession, normalizedInput);
-      const startedSession = {
-        ...previousSession,
-        continuationToken: response.continuationToken ?? previousSession.continuationToken,
-        sessionId: response.sessionId,
-        streamIndex:
-          previousSession.sessionId === response.sessionId ? previousSession.streamIndex : 0,
-      };
-
-      session = startedSession;
-
-      await onSessionStarted(startedSession);
-
-      return createBrowserMessageResponse({
-        continuationToken: response.continuationToken,
-        ignoreLeadingWaiting:
-          Boolean(previousSession.sessionId) &&
-          previousSession.sessionId === response.sessionId &&
-          startedSession.streamIndex > 0,
-        onFinalize: (events) => {
-          session = advanceBrowserSession({
-            baseStreamIndex: startedSession.streamIndex,
-            continuationToken: response.continuationToken,
-            events,
-            session: startedSession,
-            sessionId: response.sessionId,
-          });
-        },
-        sessionId: response.sessionId,
-        signal: normalizedInput.signal,
-        startIndex: startedSession.streamIndex,
-      });
+    async respond(
+      inputResponses: Parameters<ClientSession["respond"]>[0],
+      options: RespondTurnOptions = {},
+    ) {
+      return dispatch({ ...options, inputResponses });
+    },
+    async send(message: SendTurnInput["message"], options: SendTurnOptions = {}) {
+      return dispatch({ ...options, message });
     },
     stream(options?: StreamSessionOptions) {
-      const sessionId = session.sessionId;
+      const currentSession = session;
+      const sessionId = currentSession?.sessionId;
 
       if (!sessionId) {
         throw new Error("Session has no session ID. Send a message first.");
       }
 
-      const startIndex = options?.startIndex ?? session.streamIndex;
+      const startIndex = options?.startIndex ?? currentSession.streamIndex;
 
       return streamSessionEvents({
         ignoreLeadingWaiting: options?.ignoreLeadingWaiting,
         onFinalize: (events) => {
           session = advanceBrowserSession({
             baseStreamIndex: startIndex,
-            continuationToken: session.continuationToken,
             events,
-            session,
             sessionId,
           });
         },
@@ -167,47 +183,24 @@ function createPersistedClientSession({
         startIndex,
       });
     },
-    applyLocalEvents(events: readonly HandleMessageStreamEvent[]) {
-      if (!session.sessionId) {
-        throw new Error("Session has no session ID.");
-      }
-
-      session = advanceBrowserSession({
-        baseStreamIndex: session.streamIndex,
-        continuationToken: session.continuationToken,
-        events,
-        session,
-        sessionId: session.sessionId,
-      });
-
-      return session;
-    },
-    setState(nextSession: SessionState) {
+    setState(nextSession: ClientSessionState | undefined) {
       session = nextSession;
     },
   } as unknown as PersistedClientSession;
 }
 
-function createInitialSessionState(): SessionState {
-  return { streamIndex: 0 };
-}
-
-function normalizeSendInput(input: SendTurnInput) {
-  return typeof input === "string" ? { message: input } : input;
-}
-
 async function postSessionTurn(
-  session: SessionState,
-  input: ReturnType<typeof normalizeSendInput>,
+  session: ClientSessionState | undefined,
+  input: BrowserTurnInput,
 ) {
-  const body = createHandleMessageBody({ input, session });
+  const body = createHandleMessageBody({ input, isCreate: session === undefined });
 
   if (!body) {
     throw new Error("Session turn requires a message or input response.");
   }
 
   const response = await fetch(
-    session.sessionId
+    session?.sessionId
       ? `/eve/v1/session/${encodeURIComponent(session.sessionId)}`
       : EVE_CREATE_SESSION_PATH,
     {
@@ -226,7 +219,6 @@ async function postSessionTurn(
   }
 
   const payload = await response.json() as {
-    readonly continuationToken?: unknown;
     readonly sessionId?: unknown;
   };
   const sessionId =
@@ -237,21 +229,15 @@ async function postSessionTurn(
     throw new Error("Message route did not return a session id.");
   }
 
-  return {
-    continuationToken:
-      typeof payload.continuationToken === "string"
-        ? payload.continuationToken
-        : undefined,
-    sessionId,
-  };
+  return { sessionId };
 }
 
 function createHandleMessageBody({
   input,
-  session,
+  isCreate,
 }: {
-  readonly input: ReturnType<typeof normalizeSendInput>;
-  readonly session: SessionState;
+  readonly input: BrowserTurnInput;
+  readonly isCreate: boolean;
 }) {
   const body: Record<string, unknown> = {};
 
@@ -271,23 +257,11 @@ function createHandleMessageBody({
     body.outputSchema = input.outputSchema;
   }
 
-  if (session.continuationToken !== undefined) {
-    body.continuationToken = session.continuationToken;
-  }
-
   if (Object.keys(body).length === 0) {
     return null;
   }
 
-  if (session.continuationToken === undefined && body.message === undefined) {
-    return null;
-  }
-
-  if (
-    session.continuationToken !== undefined &&
-    body.message === undefined &&
-    body.inputResponses === undefined
-  ) {
+  if (isCreate && body.message === undefined) {
     return null;
   }
 
@@ -295,16 +269,14 @@ function createHandleMessageBody({
 }
 
 function createBrowserMessageResponse({
-  continuationToken,
   ignoreLeadingWaiting = false,
   onFinalize,
   sessionId,
   signal,
   startIndex,
 }: {
-  readonly continuationToken?: string;
   readonly ignoreLeadingWaiting?: boolean;
-  readonly onFinalize: (events: readonly HandleMessageStreamEvent[]) => void;
+  readonly onFinalize: (events: readonly MessageStreamEvent[]) => void;
   readonly sessionId: string;
   readonly signal?: AbortSignal;
   readonly startIndex: number;
@@ -312,7 +284,6 @@ function createBrowserMessageResponse({
   let consumed = false;
 
   return {
-    continuationToken,
     sessionId,
     [Symbol.asyncIterator]() {
       if (consumed) {
@@ -340,12 +311,12 @@ async function* streamSessionEvents({
   startIndex,
 }: {
   readonly ignoreLeadingWaiting?: boolean;
-  readonly onFinalize: (events: readonly HandleMessageStreamEvent[]) => void;
+  readonly onFinalize: (events: readonly MessageStreamEvent[]) => void;
   readonly sessionId: string;
   readonly signal?: AbortSignal;
   readonly startIndex: number;
 }) {
-  const events: HandleMessageStreamEvent[] = [];
+  const events: MessageStreamEvent[] = [];
   let nextIndex = startIndex;
   let disconnectReconnectsRemaining = STREAM_DISCONNECT_RECONNECT_ATTEMPTS;
   let lastProgressAt = Date.now();
@@ -472,7 +443,7 @@ async function* readNdjsonStream(body: ReadableStream<Uint8Array>) {
         buffer = buffer.slice(newlineIndex + 1);
 
         if (line.length > 0) {
-          yield JSON.parse(line) as HandleMessageStreamEvent;
+          yield JSON.parse(line) as MessageStreamEvent;
         }
 
         newlineIndex = buffer.indexOf("\n");
@@ -482,7 +453,7 @@ async function* readNdjsonStream(body: ReadableStream<Uint8Array>) {
     const line = buffer.trim();
 
     if (line.length > 0) {
-      yield JSON.parse(line) as HandleMessageStreamEvent;
+      yield JSON.parse(line) as MessageStreamEvent;
     }
   } finally {
     reader.releaseLock();
@@ -491,22 +462,17 @@ async function* readNdjsonStream(body: ReadableStream<Uint8Array>) {
 
 function advanceBrowserSession({
   baseStreamIndex,
-  continuationToken,
   events,
-  session,
   sessionId,
 }: {
   readonly baseStreamIndex: number;
-  readonly continuationToken?: string;
-  readonly events: readonly HandleMessageStreamEvent[];
-  readonly session: SessionState;
+  readonly events: readonly MessageStreamEvent[];
   readonly sessionId: string;
-}) {
+}): ClientSessionState | undefined {
   const boundary = findBoundaryEvent(events);
 
   if (boundary?.type === "session.waiting") {
     return {
-      continuationToken: continuationToken ?? session.continuationToken,
       sessionId,
       streamIndex: baseStreamIndex + events.length,
     };
@@ -516,16 +482,15 @@ function advanceBrowserSession({
 
   if (lastEvent?.type === "authorization.required") {
     return {
-      continuationToken: continuationToken ?? session.continuationToken,
       sessionId,
       streamIndex: baseStreamIndex + events.length,
     };
   }
 
-  return createInitialSessionState();
+  return undefined;
 }
 
-function findBoundaryEvent(events: readonly HandleMessageStreamEvent[]) {
+function findBoundaryEvent(events: readonly MessageStreamEvent[]) {
   for (let index = events.length - 1; index >= 0; index -= 1) {
     const event = events[index];
 
@@ -536,7 +501,7 @@ function findBoundaryEvent(events: readonly HandleMessageStreamEvent[]) {
 }
 
 function reduceEventsToMessageData(
-  events: readonly HandleMessageStreamEvent[],
+  events: readonly MessageStreamEvent[],
 ): EveMessageData {
   const reducer = defaultMessageReducer();
   let data = reducer.initial();
@@ -548,7 +513,7 @@ function reduceEventsToMessageData(
   return data;
 }
 
-function hasOpenChatTurn(events: readonly HandleMessageStreamEvent[]) {
+function hasOpenChatTurn(events: readonly MessageStreamEvent[]) {
   let open = false;
 
   for (const event of events) {
@@ -563,9 +528,9 @@ function hasOpenChatTurn(events: readonly HandleMessageStreamEvent[]) {
 }
 
 function namespaceStreamEvent(
-  event: HandleMessageStreamEvent,
+  event: MessageStreamEvent,
   namespace: string | undefined,
-): HandleMessageStreamEvent {
+): MessageStreamEvent {
   if (!namespace) {
     return event;
   }
@@ -595,14 +560,14 @@ function namespaceStreamEvent(
       ...event.data,
       turnId: `${prefix}${turnId}`,
     },
-  } as HandleMessageStreamEvent;
+  } as MessageStreamEvent;
 }
 
 function isSnapshotForCurrentSession(
-  snapshotSession: SessionState,
-  currentSession: SessionState | undefined,
+  snapshotSession: ClientSessionState | undefined,
+  currentSession: ClientSessionState | undefined,
 ) {
-  if (!snapshotSession.sessionId) {
+  if (!snapshotSession) {
     return true;
   }
 
@@ -690,11 +655,11 @@ export function AgentChatSession({
   const [currentTitle, setCurrentTitle] = useState(activeChat?.title ?? "New chat");
   const [clientError, setClientError] = useState<string | null>(null);
   const [dismissedError, setDismissedError] = useState<string | null>(null);
-  const [resumedEvents, setResumedEvents] = useState<HandleMessageStreamEvent[]>([]);
+  const [resumedEvents, setResumedEvents] = useState<MessageStreamEvent[]>([]);
   const [isResuming, setIsResuming] = useState(false);
   const [isFinalizingTurn, setIsFinalizingTurn] = useState(false);
-  const [streamEvents, setStreamEvents] = useState<HandleMessageStreamEvent[]>([]);
-  const [localEvents, setLocalEvents] = useState<HandleMessageStreamEvent[]>([]);
+  const [streamEvents, setStreamEvents] = useState<MessageStreamEvent[]>([]);
+  const [localEvents, setLocalEvents] = useState<MessageStreamEvent[]>([]);
   const {
     clearMessage: clearLocalPendingUserMessage,
     message: localPendingUserMessage,
@@ -705,15 +670,17 @@ export function AgentChatSession({
   const activeChatIdRef = useRef(activeChat?.id ?? chatId ?? null);
   const eventIndexRef = useRef(activeChat?.events.length ?? 0);
   const eventIndexChatIdRef = useRef(activeChat?.id ?? chatId ?? null);
-  const knownInitialEventsRef = useRef<readonly HandleMessageStreamEvent[]>(
+  const knownInitialEventsRef = useRef<readonly MessageStreamEvent[]>(
     activeChat?.events ?? [],
   );
   const currentTitleRef = useRef(activeChat?.title ?? "New chat");
   const resumeStartedRef = useRef(false);
-  const resumedEventsRef = useRef<HandleMessageStreamEvent[]>([]);
-  const streamEventsRef = useRef<HandleMessageStreamEvent[]>([]);
-  const localEventsRef = useRef<HandleMessageStreamEvent[]>([]);
-  const onSessionStartedRef = useRef<(session: SessionState) => Promise<void> | void>(
+  const resumedEventsRef = useRef<MessageStreamEvent[]>([]);
+  const streamEventsRef = useRef<MessageStreamEvent[]>([]);
+  const localEventsRef = useRef<MessageStreamEvent[]>([]);
+  const onSessionStartedRef = useRef<
+    (session: ClientSessionState) => Promise<void> | void
+  >(
     () => {},
   );
   const persistedSessionRef = useRef<PersistedClientSession | null>(null);
@@ -817,10 +784,10 @@ export function AgentChatSession({
   );
 
   const persistStreamEvent = useCallback(
-    (event: HandleMessageStreamEvent) => {
+    (event: MessageStreamEvent) => {
       const displayEvent = namespaceStreamEvent(
         event,
-        persistedSessionRef.current?.state.sessionId,
+        persistedSessionRef.current?.state?.sessionId,
       );
       const nextStreamEvents = appendUniqueStreamEvent(
         streamEventsRef.current,
@@ -859,7 +826,7 @@ export function AgentChatSession({
   );
 
   const persistSessionState = useCallback(
-    async (session: SessionState) => {
+    async (session: ClientSessionState) => {
       const chatId = activeChatIdRef.current;
 
       if (!viewer || !chatId || !session.sessionId) {
@@ -884,7 +851,7 @@ export function AgentChatSession({
 
   const agent = useEveAgent({
     initialEvents: activeChat?.events ?? [],
-    session: persistedSessionRef.current,
+    session: persistedSessionRef.current as unknown as ClientSession,
     onEvent: persistStreamEvent,
     onFinish: (snapshot) => {
       void persistSnapshot(snapshot);
@@ -950,6 +917,7 @@ export function AgentChatSession({
   const toastError = displayError && dismissedError !== displayError ? displayError : null;
 
   const resetSession = useCallback(() => {
+    persistedSessionRef.current?.setState(undefined);
     agent.reset();
     setActiveChatId(null);
     activeChatIdRef.current = null;
@@ -1096,12 +1064,11 @@ export function AgentChatSession({
 
       try {
         startFinalizingTurn();
-        await agent.send({
+        await agent.send(message, {
           clientContext: createConnectionClientContext(
             enabledConnections,
             setupStatus.connectionsAvailable,
           ),
-          message,
         });
       } catch (error) {
         if (isAbortError(error)) {
@@ -1165,7 +1132,7 @@ export function AgentChatSession({
 
       try {
         startFinalizingTurn();
-        await agent.send({ inputResponses: responses });
+        await agent.respond(responses);
       } catch (error) {
         stopFinalizingTurn();
         setClientError(error instanceof Error ? error.message : "Failed to send response.");
@@ -1196,16 +1163,17 @@ export function AgentChatSession({
         return;
       }
 
-      const events = createAuthorizationDeclinedEvents(authorization);
       const persistedSession = persistedSessionRef.current;
+      const sessionId = persistedSession?.state?.sessionId;
 
-      if (!persistedSession?.state.sessionId) {
+      if (!persistedSession || !sessionId) {
         setClientError("Session is not ready to skip authorization.");
         return;
       }
 
+      const events = createAuthorizationDeclinedEvents(authorization, sessionId);
       const previousSession = persistedSession.state;
-      const nextSession = createInitialSessionState();
+      const nextSession = undefined;
 
       agent.stop();
       persistedSession.setState(nextSession);
@@ -1230,7 +1198,7 @@ export function AgentChatSession({
           result.eventIndex + result.eventCount,
         );
         knownInitialEventsRef.current = skippedEvents;
-        const nextStreamEvents = events.reduce<HandleMessageStreamEvent[]>(
+        const nextStreamEvents = events.reduce<MessageStreamEvent[]>(
           (mergedEvents, event) => appendUniqueStreamEvent(mergedEvents, event),
           streamEventsRef.current,
         );
@@ -1581,7 +1549,7 @@ type PendingConnectionAuthorization = {
   readonly authorization?: AuthorizationRequiredStreamEvent["data"]["authorization"];
 };
 
-function getPendingAuthorizations(events: readonly HandleMessageStreamEvent[]) {
+function getPendingAuthorizations(events: readonly MessageStreamEvent[]) {
   const pending = new Map<string, PendingConnectionAuthorization>();
 
   for (const event of events) {
@@ -1686,7 +1654,8 @@ function ConnectionAuthorizationPrompt({
 
 function createAuthorizationDeclinedEvents(
   authorization: PendingConnectionAuthorization,
-): readonly HandleMessageStreamEvent[] {
+  sessionId: string,
+): readonly MessageStreamEvent[] {
   return [
     {
       data: {
@@ -1698,45 +1667,50 @@ function createAuthorizationDeclinedEvents(
         stepIndex: authorization.stepIndex,
         turnId: authorization.turnId,
       },
+      meta: createLocalEventMeta(),
       type: "authorization.completed",
     },
-    createSessionWaitingEvent(),
+    createSessionWaitingEvent(sessionId),
   ];
 }
 
-function createSessionWaitingEvent(): HandleMessageStreamEvent {
+function createSessionWaitingEvent(sessionId: string): MessageStreamEvent {
   return {
     data: {
+      continuationToken: sessionId,
       wait: "next-user-message",
     },
-    meta: {
-      at: new Date().toISOString(),
-    },
+    meta: createLocalEventMeta(),
     type: "session.waiting",
   };
 }
 
+function createLocalEventMeta() {
+  return {
+    at: new Date().toISOString(),
+    id: `local_${crypto.randomUUID()}`,
+  };
+}
+
 function advanceSessionWithLocalEvents(
-  session: SessionState,
-  events: readonly HandleMessageStreamEvent[],
+  session: ClientSessionState | undefined,
+  events: readonly MessageStreamEvent[],
 ) {
-  if (events.length === 0 || !session.sessionId) {
+  if (events.length === 0 || !session) {
     return session;
   }
 
   return advanceBrowserSession({
     baseStreamIndex: session.streamIndex,
-    continuationToken: session.continuationToken,
     events,
-    session,
     sessionId: session.sessionId,
   });
 }
 
 function mergeLocalEvents(
-  events: readonly HandleMessageStreamEvent[],
-  localEvents: readonly HandleMessageStreamEvent[],
-): HandleMessageStreamEvent[] {
+  events: readonly MessageStreamEvent[],
+  localEvents: readonly MessageStreamEvent[],
+): MessageStreamEvent[] {
   const merged = [...events];
 
   if (localEvents.length === 0) {
@@ -1760,14 +1734,14 @@ function mergeLocalEvents(
 }
 
 function mergeStreamEventLogs(
-  events: readonly HandleMessageStreamEvent[],
-  streamedEvents: readonly HandleMessageStreamEvent[],
-): HandleMessageStreamEvent[] {
+  events: readonly MessageStreamEvent[],
+  streamedEvents: readonly MessageStreamEvent[],
+): MessageStreamEvent[] {
   if (streamedEvents.length === 0) {
-    return events as HandleMessageStreamEvent[];
+    return events as MessageStreamEvent[];
   }
 
-  let merged: HandleMessageStreamEvent[] = [...events];
+  let merged: MessageStreamEvent[] = [...events];
 
   for (const event of streamedEvents) {
     const next = appendUniqueStreamEvent(merged, event);
@@ -1781,19 +1755,19 @@ function mergeStreamEventLogs(
 }
 
 function appendUniqueStreamEvent(
-  events: readonly HandleMessageStreamEvent[],
-  event: HandleMessageStreamEvent,
-): HandleMessageStreamEvent[] {
+  events: readonly MessageStreamEvent[],
+  event: MessageStreamEvent,
+): MessageStreamEvent[] {
   if (events.some((existingEvent) => areSameStreamEvent(existingEvent, event))) {
-    return events as HandleMessageStreamEvent[];
+    return events as MessageStreamEvent[];
   }
 
   return [...events, event];
 }
 
 function preserveKnownInitialEvents(
-  snapshotEvents: readonly HandleMessageStreamEvent[],
-  knownEvents: readonly HandleMessageStreamEvent[],
+  snapshotEvents: readonly MessageStreamEvent[],
+  knownEvents: readonly MessageStreamEvent[],
 ) {
   if (knownEvents.length === 0) {
     return snapshotEvents;
@@ -1821,8 +1795,8 @@ function preserveKnownInitialEvents(
 }
 
 function countSharedEventPrefix(
-  events: readonly HandleMessageStreamEvent[],
-  knownEvents: readonly HandleMessageStreamEvent[],
+  events: readonly MessageStreamEvent[],
+  knownEvents: readonly MessageStreamEvent[],
 ) {
   const count = Math.min(events.length, knownEvents.length);
 
@@ -1836,8 +1810,8 @@ function countSharedEventPrefix(
 }
 
 function areSameStreamEvent(
-  left: HandleMessageStreamEvent,
-  right: HandleMessageStreamEvent | undefined,
+  left: MessageStreamEvent,
+  right: MessageStreamEvent | undefined,
 ) {
   return right !== undefined && areEqualJsonValues(left, right);
 }
@@ -1879,7 +1853,7 @@ function areEqualJsonValues(left: unknown, right: unknown): boolean {
   );
 }
 
-function getLocalEventKey(event: HandleMessageStreamEvent) {
+function getLocalEventKey(event: MessageStreamEvent) {
   if (event.type === "authorization.completed") {
     return `${event.type}:${event.data.turnId}:${event.data.name}:${event.data.outcome}:${event.data.reason ?? ""}`;
   }

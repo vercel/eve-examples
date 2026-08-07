@@ -6,8 +6,7 @@ export interface ThreadSummary {
 }
 
 export interface EveSessionCursor {
-  sessionId?: string;
-  continuationToken?: string;
+  sessionId: string;
   streamIndex: number;
 }
 
