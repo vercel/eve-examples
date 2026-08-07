@@ -1,0 +1,36 @@
+{
+  "dependencies": {
+    "@vercel/blob": "^2.6.1",
+    "@vercel/connect": "0.4.0",
+    "ai": "^7.0.31",
+    "eve": "^0.25.2",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.3",
+    "@types/node": "~24.13.3",
+    "typescript": "7.0.2",
+    "ultracite": "^7.9.4"
+  },
+  "name": "sanity-copilot-eve-template",
+  "scripts": {
+    "build": "eve build",
+    "dev": "eve dev",
+    "start": "eve start",
+    "typecheck": "tsc",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "validate": "pnpm run check && pnpm run typecheck && eve info"
+  },
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "imports": {
+    "#*": "./agent/*",
+    "#evals/*": "./evals/*"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}
