@@ -9,7 +9,7 @@ The council uses:
 - OpenAI GPT-5.6 Sol
 - Moonshot AI Kimi K3
 
-<img width="1129" height="748" alt="image" src="https://github.com/user-attachments/assets/aaa64c52-cadd-4446-89c1-b578c17978cc" />
+<img width="1123" alt="LLM council showing four model responses and a synthesized answer" src="./public/llm-council.png" />
 
 ## Architecture
 
