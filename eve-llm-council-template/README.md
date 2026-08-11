@@ -1,6 +1,6 @@
-# eve LLM Council
+# LLM Council
 
-A small [eve](https://eve.dev) and Next.js demo that sends one prompt to four models in parallel, streams their answers, and asks a judge model for a concise answer with per-model agreement scores.
+An [eve](https://eve.dev) and Next.js demo that sends one prompt to four models in parallel, streams their answers, and asks a judge model for a concise answer with per-model agreement scores.
 
 The council uses:
 
@@ -9,7 +9,7 @@ The council uses:
 - OpenAI GPT-5.6 Sol
 - Moonshot AI Kimi K3
 
-<img width="1129" height="748" alt="image" src="https://github.com/user-attachments/assets/aaa64c52-cadd-4446-89c1-b578c17978cc" />
+<img width="1123" alt="LLM council showing four model responses and a synthesized answer" src="./public/llm-council.png" />
 
 ## Architecture
 
