@@ -1,4 +1,4 @@
-# eve LLM Council
+# LLM Council
 
 A small [eve](https://eve.dev) and Next.js demo that sends one prompt to four models in parallel, streams their answers, and asks a judge model for a concise answer with per-model agreement scores.
 
