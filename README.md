@@ -1,7 +1,7 @@
 # eve-examples
 
-Open-source Eve agent templates. Each template is maintained as a standalone
-upstream repository and imported here as a detached subdirectory.
+Open-source eve agent templates and examples. Most templates are maintained as
+standalone upstream repositories and imported here as detached subdirectories.
 
 | Template | Directory | Upstream | Imported commit |
 | --- | --- | --- | --- |
@@ -12,3 +12,4 @@ upstream repository and imported here as a detached subdirectory.
 | Chat Template | [`eve-chat-template`](./eve-chat-template) | [vercel-labs/eve-chat-template](https://github.com/vercel-labs/eve-chat-template) | `4792ac1` |
 | Typefully Agent | [`typefully-eve-template`](./typefully-eve-template) | [vercel-labs/typefully-eve-template](https://github.com/vercel-labs/typefully-eve-template) | `3627b22` |
 | LLM Council | [`eve-llm-council-template`](./eve-llm-council-template) | [vercel-labs/eve-llm-council](https://github.com/vercel-labs/eve-llm-council) | `b591cd7` |
+| MCP + Sign in with Vercel | [`eve-mcp-channel-sign-in-with-vercel`](./eve-mcp-channel-sign-in-with-vercel) | This repository | — |

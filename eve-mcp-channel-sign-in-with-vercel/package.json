@@ -1,0 +1,19 @@
+{
+  "name": "eve-mcp-channel-sign-in-with-vercel",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "eve build",
+    "dev": "eve dev",
+    "start": "eve start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "eve": "^0.37.1"
+  },
+  "devDependencies": {
+    "@types/node": "~26.1.2",
+    "typescript": "7.0.2"
+  }
+}
