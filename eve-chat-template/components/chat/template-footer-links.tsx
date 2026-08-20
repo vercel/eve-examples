@@ -39,7 +39,6 @@ const DEPLOY_URL = (() => {
       "https://images.ctfassets.net/e5382hct74si/YXYTquqpBmvVFbASdIvrC/bb50d21ba7866882d90e25d842b6fc02/eve-chat-no-bg.png",
     ],
     ["demo-title", "eve Chat Template"],
-    ["demo-url", "https://chat.eve.dev"],
     ["env", DEPLOY_ENV_VARS.join(",")],
     [
       "envDescription",
