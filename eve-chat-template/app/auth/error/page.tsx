@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 
 const SETUP_DOCS_URL =
-  "https://github.com/vercel-labs/eve-chat-template/blob/main/docs/setup-and-deploy.md";
+  "https://github.com/vercel/eve-examples/blob/main/eve-chat-template/docs/setup-and-deploy.md";
 const SIGN_IN_WITH_VERCEL_URL =
   "https://vercel.com/docs/sign-in-with-vercel/getting-started#prerequisites";
 const SIGN_IN_WITH_VERCEL_SCOPES_URL =

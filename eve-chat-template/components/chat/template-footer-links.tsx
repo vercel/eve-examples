@@ -5,11 +5,12 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { cn } from "@/lib/utils";
 
 const EVE_URL = "https://vercel.com/eve";
-const GITHUB_URL = "https://github.com/vercel-labs/eve-chat-template";
+const GITHUB_REPOSITORY_URL = "https://github.com/vercel/eve-examples";
+const GITHUB_URL = `${GITHUB_REPOSITORY_URL}/tree/main/eve-chat-template`;
 const COPY_PROMPT = `You are helping me bootstrap and deploy my own eve chat agent from the Vercel eve chat template.
 
 Source template:
-https://github.com/vercel-labs/eve-chat-template
+${GITHUB_URL}
 
 Goal:
 Fork or clone the template into a new project, customize the agent if I ask, verify it locally, and deploy the database-free starter to Vercel.
@@ -17,7 +18,7 @@ Fork or clone the template into a new project, customize the agent if I ask, ver
 Use the repository README, docs/setup-and-deploy.md, and scripts/setup.sh as the source of truth. Prefer the one-shot setup script when possible:
 
 1. Confirm prerequisites: Node.js 24+, pnpm/Corepack, Vercel CLI, a Vercel account/team, and authentication with vercel login.
-2. Create/fork/clone a new project from vercel-labs/eve-chat-template.
+2. Create/fork/clone the eve-chat-template subtree from vercel/eve-examples.
 3. Install dependencies with pnpm install.
 4. Link the Vercel project with vercel link, using --scope <team-slug> if I provide one.
 5. Generate a strong EVE_CHAT_PASSWORD (16+ characters recommended) and add it to local and Vercel environments without printing it.
@@ -29,15 +30,29 @@ Do not print secrets in the final answer. Ask before deleting or overwriting any
 const DEPLOY_ENV_VARS = ["EVE_CHAT_PASSWORD"] as const;
 const DEPLOY_URL = (() => {
   const params = new URLSearchParams([
-    ["project-name", "eve-chat-template"],
-    ["repository-name", "eve-chat-template"],
-    ["repository-url", `${GITHUB_URL}/tree/main`],
+    [
+      "demo-description",
+      "A persisted Next.js chat template for eve, built with shadcn/ui, Tailwind CSS, Streamdown, Better Auth, Drizzle, and Neon.",
+    ],
+    [
+      "demo-image",
+      "https://images.ctfassets.net/e5382hct74si/YXYTquqpBmvVFbASdIvrC/bb50d21ba7866882d90e25d842b6fc02/eve-chat-no-bg.png",
+    ],
+    ["demo-title", "eve Chat Template"],
+    ["demo-url", "https://chat.eve.dev"],
     ["env", DEPLOY_ENV_VARS.join(",")],
     [
       "envDescription",
       "Choose a strong password to protect your agent (16+ characters recommended).",
     ],
-    ["envLink", `${GITHUB_URL}/blob/main/docs/setup-and-deploy.md`],
+    [
+      "envLink",
+      `${GITHUB_REPOSITORY_URL}/blob/main/eve-chat-template/docs/setup-and-deploy.md`,
+    ],
+    ["from", "templates"],
+    ["project-name", "eve Chat Template"],
+    ["repository-name", "eve-chat-template"],
+    ["repository-url", GITHUB_URL],
   ]);
 
   return `https://vercel.com/new/clone?${params.toString()}`;
