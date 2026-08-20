@@ -1,7 +1,6 @@
 # eve-examples
 
-Open-source eve agent templates. Each template is maintained as a standalone
-upstream repository and imported here as a detached subdirectory.
+Open-source eve agent templates.
 
 | Template | Directory | Upstream | Imported commit |
 | --- | --- | --- | --- |
