@@ -1175,7 +1175,7 @@ export function AgentChatSession({
       const previousSession = persistedSession.state;
       const nextSession = undefined;
 
-      agent.stop();
+      agent.reset();
       persistedSession.setState(nextSession);
 
       const nextLocalEvents = mergeLocalEvents(localEventsRef.current, events);
@@ -1449,7 +1449,7 @@ export function AgentChatSession({
       {
         reset: resetSession,
         sendMessage,
-        stop: agent.stop,
+        stop: () => void agent.cancel(),
       },
       {
         disabledReason,
@@ -1459,7 +1459,7 @@ export function AgentChatSession({
       },
     );
   }, [
-    agent.stop,
+    agent.cancel,
     disabledReason,
     isBusy,
     isFinalizingTurn,
