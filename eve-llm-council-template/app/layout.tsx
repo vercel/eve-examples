@@ -1,3 +1,4 @@
+import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
@@ -14,7 +15,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { readonly children: ReactNode }) {
   return (
-    <html className={GeistMono.variable} lang="en">
+    <html className={`${GeistSans.variable} ${GeistMono.variable}`} lang="en">
+      <head>
+        <link href="https://vercel.com/geist/vercel-brand.css" precedence="vbg" rel="stylesheet" />
+      </head>
       <body>{children}</body>
     </html>
   );

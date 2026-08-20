@@ -30,9 +30,16 @@ Do not print secrets in the final answer. Ask before deleting or overwriting any
 const DEPLOY_ENV_VARS = ["EVE_CHAT_PASSWORD"] as const;
 const DEPLOY_URL = (() => {
   const params = new URLSearchParams([
-    ["project-name", "eve-chat-template"],
-    ["repository-name", "eve-chat-template"],
-    ["repository-url", GITHUB_URL],
+    [
+      "demo-description",
+      "A persisted Next.js chat template for eve, built with shadcn/ui, Tailwind CSS, Streamdown, Better Auth, Drizzle, and Neon.",
+    ],
+    [
+      "demo-image",
+      "https://images.ctfassets.net/e5382hct74si/YXYTquqpBmvVFbASdIvrC/bb50d21ba7866882d90e25d842b6fc02/eve-chat-no-bg.png",
+    ],
+    ["demo-title", "eve Chat Template"],
+    ["demo-url", "https://chat.eve.dev"],
     ["env", DEPLOY_ENV_VARS.join(",")],
     [
       "envDescription",
@@ -42,6 +49,10 @@ const DEPLOY_URL = (() => {
       "envLink",
       `${GITHUB_REPOSITORY_URL}/blob/main/eve-chat-template/docs/setup-and-deploy.md`,
     ],
+    ["from", "templates"],
+    ["project-name", "eve Chat Template"],
+    ["repository-name", "eve-chat-template"],
+    ["repository-url", GITHUB_URL],
   ]);
 
   return `https://vercel.com/new/clone?${params.toString()}`;

@@ -188,25 +188,39 @@ export function CouncilApp() {
   };
 
   return (
-    <main id="main-content">
-      <h1 className="page-title" translate="no">
-        eve.dev llm council
-      </h1>
-      <section aria-busy={busy} aria-label="Council response graph" className="flow">
-        {error ? (
-          <p className="status-message" role="alert">
-            {error}
-          </p>
-        ) : null}
+    <div className="vbg-report">
+      <div className="vbg-shell">
+        <a className="vbg-skip-link" href="#main-content">
+          Skip to content
+        </a>
+        <header className="vbg-header vbg-custom-header">
+          <div className="vbg-masthead">
+            <span className="vbg-identity">
+              <span aria-label="Vercel" className="vbg-wordmark" role="img" />
+            </span>
+          </div>
+        </header>
+        <main id="main-content">
+          <h1 className="vbg-custom-sr-only">eve LLM council</h1>
+          <section
+            aria-busy={busy}
+            aria-label="Council response graph"
+            className="vbg-custom-flow"
+          >
+            {error ? (
+              <p className="vbg-custom-status-message" role="alert">
+                {error}
+              </p>
+            ) : null}
 
         <form
-          className="prompt-node"
+          className="vbg-custom-prompt-node"
           onSubmit={(event) => {
             event.preventDefault();
             submit();
           }}
         >
-          <label className="sr-only" htmlFor="council-prompt">
+          <label className="vbg-custom-sr-only" htmlFor="council-prompt">
             Ask the council
           </label>
           <textarea
@@ -225,7 +239,7 @@ export function CouncilApp() {
             required
             rows={4}
           />
-          <div className="prompt-footer">
+          <div className="vbg-custom-prompt-footer">
             <span>Enter to submit · Shift + Enter for a new line</span>
             <button disabled={busy} type="submit">
               {busy ? "Council is responding…" : "Ask Council"}
@@ -235,7 +249,7 @@ export function CouncilApp() {
 
         <Connector direction="out" />
 
-        <div className="member-list">
+        <div className="vbg-custom-member-list">
           {members.map((member) => (
             <MemberCard key={member.id} member={member} state={memberState[member.id]} />
           ))}
@@ -246,11 +260,13 @@ export function CouncilApp() {
         <article
           aria-busy={summaryRunning}
           aria-live="polite"
-          className={`node summary-node ${result ? "complete" : summaryRunning ? "running" : ""}`}
+          className={`vbg-custom-node vbg-custom-summary-node ${
+            result ? "vbg-custom-complete" : summaryRunning ? "vbg-custom-running" : ""
+          }`}
         >
-          <div className="summary-heading">
-            <span className="node-kicker">Council Summary</span>
-            <span aria-hidden="true" className="status-dot" />
+          <div className="vbg-custom-summary-heading">
+            <span className="vbg-custom-node-kicker">Council Summary</span>
+            <span aria-hidden="true" className="vbg-custom-status-dot" />
           </div>
           {result ? (
             <>
@@ -263,7 +279,7 @@ export function CouncilApp() {
               <h2>Synthesizing…</h2>
               <p>
                 The judge is comparing the 4 completed responses.
-                <span aria-hidden="true" className="elapsed">
+                <span aria-hidden="true" className="vbg-custom-elapsed">
                   {" · "}
                   <ElapsedTime />
                 </span>
@@ -277,8 +293,14 @@ export function CouncilApp() {
           )}
           <UsageDetails label="Summary usage" usage={summaryUsage} />
         </article>
-      </section>
-    </main>
+          </section>
+        </main>
+        <footer className="vbg-footer">
+          <span aria-label="Vercel" className="vbg-logo" role="img" />
+          <span>Built with eve.dev</span>
+        </footer>
+      </div>
+    </div>
   );
 }
 
@@ -316,18 +338,21 @@ function MemberCard({
         : "";
 
   return (
-    <article aria-busy={state.status === "running"} className={`node member-node ${state.status}`}>
-      <div className="member-heading" translate="no">
+    <article
+      aria-busy={state.status === "running"}
+      className={`vbg-custom-node vbg-custom-member-node vbg-custom-${state.status}`}
+    >
+      <div className="vbg-custom-member-heading" translate="no">
         <div>
-          <span className="node-kicker">{member.label}</span>
+          <span className="vbg-custom-node-kicker">{member.label}</span>
           <h2 translate="no">{member.model}</h2>
         </div>
-        <span aria-hidden="true" className="status-dot" />
+        <span aria-hidden="true" className="vbg-custom-status-dot" />
       </div>
       {state.response ? (
         <MarkdownResponse markdown={state.response} streaming={state.status === "running"} />
       ) : (
-        <p className="response-text">{placeholder}</p>
+        <p className="vbg-custom-response-text">{placeholder}</p>
       )}
       <UsageDetails label={`${member.model} usage`} usage={state.usage} />
     </article>
@@ -343,7 +368,7 @@ function MarkdownResponse({
 }) {
   return (
     <ComarkClient
-      className="response-text markdown-response"
+      className="vbg-custom-response-text vbg-custom-markdown-response"
       markdown={markdown}
       streaming={streaming}
     />
@@ -352,7 +377,7 @@ function MarkdownResponse({
 
 function AgreementScores({ scores }: { readonly scores: CouncilResult["agreementScores"] }) {
   return (
-    <section aria-labelledby="agreement-heading" className="agreement-scores">
+    <section aria-labelledby="agreement-heading" className="vbg-custom-agreement-scores">
       <h3 id="agreement-heading">Model agreement</h3>
       <dl>
         {members.map((member) => {
@@ -375,7 +400,7 @@ function AgreementScores({ scores }: { readonly scores: CouncilResult["agreement
 
 function UsageDetails({ label, usage }: { readonly label: string; readonly usage: Usage }) {
   return (
-    <dl aria-label={label} className="usage">
+    <dl aria-label={label} className="vbg-custom-usage">
       <div>
         <dt>Input</dt>
         <dd>
@@ -406,7 +431,7 @@ function Connector({ direction }: { readonly direction: "in" | "out" }) {
   return (
     <svg
       aria-hidden="true"
-      className={`connector connector-${direction}`}
+      className={`vbg-custom-connector vbg-custom-connector-${direction}`}
       preserveAspectRatio="none"
       viewBox="0 0 100 100"
     >
@@ -421,7 +446,7 @@ function Connector({ direction }: { readonly direction: "in" | "out" }) {
           vectorEffect="non-scaling-stroke"
         />
       ))}
-      <path className="mobile-connector" d="M 50 0 L 50 100" vectorEffect="non-scaling-stroke" />
+      <path className="vbg-custom-mobile-connector" d="M 50 0 L 50 100" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
