@@ -52,7 +52,7 @@ export function createEveChatSession(
   }
 
   function stop() {
-    agent.value.stop();
+    void agent.value.cancel();
   }
 
   function reset() {

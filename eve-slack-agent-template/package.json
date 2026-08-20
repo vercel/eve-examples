@@ -13,13 +13,13 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@vercel/connect": "0.2.7",
-    "ai": "7.0.38",
-    "eve": "^0.31.2",
+    "@vercel/connect": "0.8.0",
+    "ai": "7.0.70",
+    "eve": "^0.39.3",
     "zod": "4.4.3"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
-    "typescript": "7.0.1-rc"
+    "typescript": "7.0.2"
   }
 }

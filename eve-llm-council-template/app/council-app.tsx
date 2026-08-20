@@ -1,6 +1,6 @@
 "use client";
 
-import { ComarkClient } from "@comark/react";
+import { MarkdownClient } from "@comark/react";
 import { Client, type MessageStreamEvent } from "eve/client";
 import { useEveAgent } from "eve/react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -367,9 +367,9 @@ function MarkdownResponse({
   readonly streaming?: boolean;
 }) {
   return (
-    <ComarkClient
+    <MarkdownClient
       className="vbg-custom-response-text vbg-custom-markdown-response"
-      markdown={markdown}
+      value={markdown}
       streaming={streaming}
     />
   );
