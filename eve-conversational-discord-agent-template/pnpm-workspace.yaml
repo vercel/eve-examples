@@ -1,0 +1,16 @@
+packages:
+  - "services/*"
+
+allowBuilds:
+  "@swc/core": true
+  cbor-extract: true
+  esbuild: true
+  sharp: false
+
+minimumReleaseAgeExclude:
+  - "@ai-sdk/*"
+  - "@vercel/*"
+  - "@workflow/*"
+  - ai
+  - eve
+  - workflow
