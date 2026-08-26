@@ -1,8 +1,8 @@
-# eve Discord Agent Template
+# eve Conversational Discord Agent Template
 
 A conversational Discord agent template for [eve](https://eve.dev). Users can talk to the agent naturally in DMs, mention it in a server, continue a conversation by replying, or use slash commands and Discord interactions.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?connect=%5B%7B%22type%22%3A%22discord%22%2C%22env%22%3A%22DISCORD_CONNECTOR%22%2C%22triggers%22%3Atrue%2C%22triggerPath%22%3A%22%2Feve%2Fv1%2Fdiscord%22%7D%5D&demo-description=A+conversational+Discord+agent+for+DMs%2C+mentions%2C+replies%2C+and+slash+commands%2C+built+with+eve.&demo-title=eve+Discord+Agent&env=CRON_SECRET&env=RELAY_FORWARD_SECRET&envDescription=Generate+separate+random+values+for+the+Discord+listener+and+message+delivery.&project-name=eve+Discord+Agent&repository-name=eve-discord-agent&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Feve-discord-agent-template)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?connect=%5B%7B%22type%22%3A%22discord%22%2C%22env%22%3A%22DISCORD_CONNECTOR%22%2C%22triggers%22%3Atrue%2C%22triggerPath%22%3A%22%2Feve%2Fv1%2Fdiscord%22%7D%5D&demo-description=A+conversational+Discord+agent+for+DMs%2C+mentions%2C+replies%2C+and+slash+commands%2C+built+with+eve.&demo-title=eve+Conversational+Discord+Agent&env=CRON_SECRET&env=RELAY_FORWARD_SECRET&envDescription=Generate+separate+random+values+for+the+Discord+listener+and+message+delivery.&project-name=eve+Conversational+Discord+Agent&repository-name=eve-conversational-discord-agent&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Feve-conversational-discord-agent-template)
 
 > [!WARNING]
 > Conversational message support is experimental and intended as a starting point for prototypes and small bots. Review the [reliability boundary](#reliability-boundary) before using it in production.

@@ -1,5 +1,5 @@
 {
-  "name": "eve-discord-agent-template",
+  "name": "eve-conversational-discord-agent-template",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.21.0",

@@ -1,5 +1,5 @@
 {
-  "name": "eve-discord-agent",
+  "name": "eve-conversational-discord-agent",
   "version": "0.0.0",
   "private": true,
   "type": "module",
