@@ -1,11 +1,20 @@
-# eve Discord Gateway Relay
+# eve Discord Agent Template
 
-An experimental conversational Discord agent template for [eve](https://eve.dev). It receives slash commands through Vercel Connect and ordinary Discord messages through a bounded Gateway WebSocket running in Vercel Workflow.
+A conversational Discord agent template for [eve](https://eve.dev). Users can talk to the agent naturally in DMs, mention it in a server, continue a conversation by replying, or use slash commands and Discord interactions.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?connect=%5B%7B%22type%22%3A%22discord%22%2C%22env%22%3A%22DISCORD_CONNECTOR%22%2C%22triggers%22%3Atrue%2C%22triggerPath%22%3A%22%2Feve%2Fv1%2Fdiscord%22%7D%5D&demo-description=An+experimental+conversational+Discord+agent+built+with+eve%2C+Vercel+Workflow%2C+Services%2C+WebSockets%2C+and+Connect.&demo-title=eve+Discord+Gateway+Relay&env=CRON_SECRET&env=RELAY_FORWARD_SECRET&envDescription=Generate+separate+random+values+for+the+cron+supervisor+and+authenticated+relay+delivery.&project-name=eve+Discord+Gateway+Relay&repository-name=eve-discord-gateway-relay&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Feve-discord-gateway-relay-template)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?connect=%5B%7B%22type%22%3A%22discord%22%2C%22env%22%3A%22DISCORD_CONNECTOR%22%2C%22triggers%22%3Atrue%2C%22triggerPath%22%3A%22%2Feve%2Fv1%2Fdiscord%22%7D%5D&demo-description=A+conversational+Discord+agent+for+DMs%2C+mentions%2C+replies%2C+and+slash+commands%2C+built+with+eve.&demo-title=eve+Discord+Agent&env=CRON_SECRET&env=RELAY_FORWARD_SECRET&envDescription=Generate+separate+random+values+for+the+Discord+listener+and+message+delivery.&project-name=eve+Discord+Agent&repository-name=eve-discord-agent&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Feve-discord-agent-template)
 
 > [!WARNING]
-> This template is a starting point for prototypes and small bots, not a permanent-daemon guarantee. Review the [reliability boundary](#reliability-boundary) before using it in production.
+> Conversational message support is experimental and intended as a starting point for prototypes and small bots. Review the [reliability boundary](#reliability-boundary) before using it in production.
+
+## What Is Included
+
+- Natural conversations in Discord DMs
+- Server conversations started with an `@mention`
+- Follow-up messages sent as replies to the agent's current response
+- Slash commands, components, and modals through the native eve Discord channel
+- Durable eve sessions and Discord REST API responses
+- An editable Vercel-hosted listener for ordinary Discord messages
 
 ## How It Works
 
@@ -26,8 +35,8 @@ Discord REST API replies
 
 The project contains two [Vercel Services](https://vercel.com/docs/services):
 
-- `services/relay` owns the Discord Gateway connection and forwards `MESSAGE_CREATE` events.
 - `services/eve` runs the agent, handles Discord interactions and messages through one native channel, and sends replies.
+- `services/relay` implements the bounded Discord Gateway listener used for ordinary messages.
 
 Vercel Cron reconciles the relay every five minutes. Each Workflow step holds the socket for up to ten minutes, commits a safe Discord Resume checkpoint, and hands off to another bounded step. Gateway control frames are handled immediately while message delivery proceeds through one ordered lane.
 
@@ -81,7 +90,7 @@ In Discord's Developer Portal, enable these Gateway intents:
 
 The installation should grant View Channels, Send Messages, Read Message History, and Send Messages in Threads. Reinstall the application after changing its permissions.
 
-## Message Behavior
+## Conversation Behavior
 
 - Every non-bot DM starts or resumes one conversation identified by its DM channel.
 - An explicit bot mention in a guild starts a new message-anchored conversation.
@@ -103,7 +112,7 @@ The native channel currently recognizes thread identity only when Discord includ
 | `RELAY_SECRET` | No | Optional separate bearer secret for manual `POST /relay/start` calls. |
 | `RELAY_RUN_MS` | No | Gateway step duration in milliseconds. Defaults to `600000` and is capped at `720000`. |
 
-Only production deployments own Gateway connections. Preview deployments build both services but do not start the relay.
+Only production deployments run the Discord message listener. Preview deployments build both services but do not connect to Discord's Gateway.
 
 ## Customize the Agent
 
