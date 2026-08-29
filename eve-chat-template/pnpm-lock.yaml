@@ -43,7 +43,7 @@ importers:
         version: 2.0.1(next@16.3.1(@types/node@25.9.5)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
       '@vercel/connect':
         specifier: 0.8.0
-        version: 0.8.0(ai@7.0.70(zod@4.4.3))(better-auth@1.7.1(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(mongodb@7.3.0)(next@16.3.1(@types/node@25.9.5)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(eve@0.39.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0))
+        version: 0.8.0(ai@7.0.70(zod@4.4.3))(better-auth@1.7.1(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(mongodb@7.3.0)(next@16.3.1(@types/node@25.9.5)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(eve@0.47.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0))
       '@vercel/speed-insights':
         specifier: 2.0.0
         version: 2.0.0(next@16.3.1(@types/node@25.9.5)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
@@ -66,8 +66,8 @@ importers:
         specifier: 0.45.2
         version: 0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5)
       eve:
-        specifier: ^0.39.3
-        version: 0.39.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0)
+        specifier: ^0.47.3
+        version: 0.47.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0)
       lucide-react:
         specifier: 1.33.0
         version: 1.33.0(react@19.2.8)
@@ -3039,15 +3039,15 @@ packages:
   estree-util-is-identifier-name@3.0.0:
     resolution: {integrity: sha512-hFtqIDZTIUZ9BXLb8y4pYGyk6+wekIivNVTcmvk8NoOh+VeRn5y6cEHzbURrWbfp1fIqdVipilzj+lfaadNZmg==}
 
-  eve@0.39.3:
-    resolution: {integrity: sha512-BQqxp+htxisijebDyGGcKdB00Rlw+hD+AqbDX/XzZ429/RLH/k33LRsKrTq7kKNIOQ5E9xQTY2gmph1ppCIS/A==}
+  eve@0.47.3:
+    resolution: {integrity: sha512-CFj/CW+7mg9/r2thFDJ07r9kzy6qxyfHzMDDHOOCDCMGIY/EXkl4EbsmO2Z+4SY/JMJ7Ywh6KELnXf3AQD+z/w==}
     engines: {node: '>=24'}
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.0.0
       ai: ^7.0.58
       braintrust: ^3.0.0
-      just-bash: ^3.0.0
+      just-bash: ^3.1.0
       microsandbox: ^0.5.0
     peerDependenciesMeta:
       '@opentelemetry/api':
@@ -6137,13 +6137,13 @@ snapshots:
     dependencies:
       execa: 5.1.1
 
-  '@vercel/connect@0.8.0(ai@7.0.70(zod@4.4.3))(better-auth@1.7.1(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(mongodb@7.3.0)(next@16.3.1(@types/node@25.9.5)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(eve@0.39.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0))':
+  '@vercel/connect@0.8.0(ai@7.0.70(zod@4.4.3))(better-auth@1.7.1(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(mongodb@7.3.0)(next@16.3.1(@types/node@25.9.5)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(eve@0.47.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0))':
     dependencies:
       '@vercel/oidc': 3.8.4
     optionalDependencies:
       ai: 7.0.70(zod@4.4.3)
       better-auth: 1.7.1(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(mongodb@7.3.0)(next@16.3.1(@types/node@25.9.5)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      eve: 0.39.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0)
+      eve: 0.47.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0)
 
   '@vercel/oidc@3.2.0': {}
 
@@ -6614,7 +6614,7 @@ snapshots:
 
   estree-util-is-identifier-name@3.0.0: {}
 
-  eve@0.39.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0):
+  eve@0.47.3(@upstash/redis@1.38.2)(ai@7.0.70(zod@4.4.3))(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(microsandbox@0.5.10)(mongodb@7.3.0):
     dependencies:
       ai: 7.0.70(zod@4.4.3)
       nitro: 3.0.260610-beta(@upstash/redis@1.38.2)(drizzle-orm@0.45.2(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(@upstash/redis@1.38.2)(kysely@0.29.5))(jiti@2.7.0)(mongodb@7.3.0)
