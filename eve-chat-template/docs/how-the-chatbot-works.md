@@ -29,6 +29,8 @@ Important files:
 | `agent/connections/notion.ts` | Defines the Notion MCP connection through Vercel Connect. |
 | `agent/connections/linear.ts` | Defines the Linear MCP connection through Vercel Connect. |
 | `agent/connections/sentry.ts` | Defines the Sentry MCP connection through Vercel Connect. |
+| `agent/instructions.md` | Defines the agent's behavior and long-term-memory rules. |
+| `agent/memory/profile.ts` | Defines the per-principal long-term-memory slot. |
 | `next.config.ts` | Wraps the app with `withEve(nextConfig)`, which mounts the `/eve/v1/*` routes. |
 | `app/(chat)/layout.tsx` | Renders the static chat shell immediately, then streams viewer/setup/sidebar data through Suspense. |
 | `app/(chat)/page.tsx` | Root chat screen. Creates a new chat row and navigates into `/chat/[id]`. |
@@ -84,6 +86,13 @@ Those two pieces are intentionally separate. The `eveSession.streamIndex` tells
 eve where to resume from in the remote session stream. The local
 `chat_event.eventIndex` tells Postgres how to order the event log for rendering.
 Do not treat those indices as interchangeable.
+
+Long-term memory is separate from both app-chat persistence and eve session
+history. `agent/memory/profile.ts` scopes a bounded, model-maintained document
+to the authenticated eve principal. On Vercel, the slot stays disabled until an
+`EVE_MEMORY_BLOB_*` store is configured; generic `BLOB_*` variables are
+intentionally ignored. The setup script provisions that private Blob store. In
+local development, eve uses process-local memory.
 
 ## Rendering Strategy
 

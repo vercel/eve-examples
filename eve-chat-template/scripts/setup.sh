@@ -2,9 +2,9 @@
 #
 # eve Chat Template — one-shot setup.
 #
-# Links the Vercel project, provisions Neon, registers the "Sign in with Vercel"
-# OAuth app, sets every environment variable through the Vercel API, pulls them
-# locally, and runs database migrations.
+# Links the Vercel project, provisions private Blob memory plus Neon, registers
+# the "Sign in with Vercel" OAuth app, sets every environment variable through
+# the Vercel API, pulls them locally, and runs database migrations.
 #
 # The OAuth app is created via the Vercel API (email scope + callback URLs set
 # automatically). If that API is unavailable, the script falls back to a guided
@@ -110,6 +110,17 @@ provision_integration() {
 }
 
 # --- 3. Provision required storage ------------------------------------------
+# Long-term memory is optional and independent of the other storage. Skip it
+# when the store is already connected, and never let a failure here block the
+# Neon, Upstash, and Sign in with Vercel steps below.
+step "Provisioning private file memory"
+if vercel env ls $SCOPE_FLAGS 2>/dev/null | grep -q 'EVE_MEMORY_BLOB_STORE_ID'; then
+  echo "  EVE_MEMORY_BLOB_STORE_ID already present, skipping"
+elif ! pnpm exec eve integration setup file-memory --yes; then
+  warn "Could not set up file memory. Long-term memory stays disabled on Vercel."
+  warn "Re-run 'pnpm exec eve integration setup file-memory' later to enable it."
+fi
+
 step "Provisioning Neon Postgres"
 provision_integration "Neon" neon DATABASE_URL
 

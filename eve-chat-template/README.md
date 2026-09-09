@@ -1,6 +1,6 @@
 # eve Chat Template
 
-A Next.js chat template for [eve](https://eve.dev) that starts with password access and browser-persisted chats, then upgrades to Sign in with Vercel, Neon, and Upstash when you need a production multi-user application.
+A Next.js chat template for [eve](https://eve.dev) that starts with password access and browser-persisted chats, then upgrades to durable memory, Sign in with Vercel, Neon, and Upstash when you need a production multi-user application.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-description=A%20persisted%20Next.js%20chat%20template%20for%20eve%2C%20built%20with%20shadcn%2Fui%2C%20Tailwind%20CSS%2C%20Streamdown%2C%20Better%20Auth%2C%20Drizzle%2C%20and%20Neon.&demo-image=https%3A%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2FYXYTquqpBmvVFbASdIvrC%2Fbb50d21ba7866882d90e25d842b6fc02%2Feve-chat-no-bg.png&demo-title=eve%20Chat%20Template&demo-url=https%3A%2F%2Fchat.eve.dev&env=EVE_CHAT_PASSWORD&envDescription=Choose%20a%20strong%20password%20to%20protect%20your%20agent%20%2816%2B%20characters%20recommended%29.&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Fblob%2Fmain%2Feve-chat-template%2Fdocs%2Fsetup-and-deploy.md&from=templates&project-name=eve%20Chat%20Template&repository-name=eve-chat-template&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Feve-chat-template)
 
@@ -12,17 +12,18 @@ Deploy the starter without provisioning a database or other Marketplace products
 2. Enter a strong `EVE_CHAT_PASSWORD` (16+ characters recommended).
 3. Open the deployed app and enter that password.
 
-Chats and eve session cursors are stored in that browser. They are not shared across browsers or users.
+Chats and eve session cursors are stored in that browser. They are not shared across browsers or users. The starter does not enable cross-session long-term memory on Vercel until you set up Blob storage; see [Long-Term Memory](docs/setup-and-deploy.md#long-term-memory).
+
 Starter mode is intended for one trusted operator: anyone with the password
 shares the same agent identity and connection grants.
 
 ## Deployment Modes
 
-| Mode | Selected when | Authentication | Chat persistence |
-| --- | --- | --- | --- |
-| Starter | `EVE_CHAT_PASSWORD` is configured | Shared password and secure session cookie | Browser localStorage |
-| Production | Neon, Upstash, and all Sign in with Vercel variables are configured | Sign in with Vercel | Neon |
-| Local development | Neither mode is configured and `next dev` is running locally | Local development identity | Browser localStorage |
+| Mode | Selected when | Authentication | Chat persistence | Long-term memory |
+| --- | --- | --- | --- | --- |
+| Starter | `EVE_CHAT_PASSWORD` is configured | Shared password and secure session cookie | Browser localStorage | Shared Vercel Blob document after setup |
+| Production | Neon, Upstash, and all Sign in with Vercel variables are configured | Sign in with Vercel | Neon | Per-user Vercel Blob document |
+| Local development | Neither mode is configured and `next dev` is running locally | Local development identity | Browser localStorage | Process-local |
 
 Production mode takes precedence when its complete environment is present. The app fails closed in a production deployment when neither mode is configured. See [Setup and Deployment](docs/setup-and-deploy.md) for the upgrade path.
 
@@ -48,7 +49,7 @@ To require the same password locally, put this in `.env.local`:
 EVE_CHAT_PASSWORD=<at-least-16-characters>
 ```
 
-To upgrade the linked project to production mode, run the setup script. It provisions Neon and Upstash, registers Sign in with Vercel, pulls environment variables, and runs migrations:
+To upgrade the linked project to production mode, run the setup script. It provisions private Vercel Blob storage for memory, Neon, and Upstash; registers Sign in with Vercel; pulls environment variables; and runs migrations. Blob usage may incur charges:
 
 ```bash
 ./scripts/setup.sh
@@ -130,6 +131,7 @@ pnpm dev
 - Optional Better Auth sign-in with Vercel
 - Optional Neon-backed cross-device chat history
 - Optional Upstash Redis rate limiting in production mode
+- Optional long-term memory in a private Vercel Blob document (per user in production mode)
 - Drizzle schema and migrations for production mode under `lib/db`
 - Saved eve session cursors and event snapshots in either storage mode
 - Sidebar history with delete and new-chat actions
@@ -140,10 +142,10 @@ pnpm dev
 - Streamdown markdown rendering for assistant text and reasoning
 - shadcn/Tailwind components for messages, tools, HITL prompts, and composer
 
-This template intentionally does not include file uploads, Vercel Blob, guest mode, NextAuth/Auth.js, or AI Elements.
+This template intentionally does not include file uploads, guest mode, NextAuth/Auth.js, or AI Elements.
 
 ## Agent Code
 
-Edit the agent in `agent/agent.ts`. Its behavior is defined in `agent/instructions.md`, and tools live in `agent/tools/`.
+Edit the agent in `agent/agent.ts`. Its behavior is defined in `agent/instructions.md`, tools live in `agent/tools/`, and `agent/memory/profile.ts` defines per-user long-term memory.
 
 The browser talks to eve with `useEveAgent()` from `eve/react`; the app stores eve stream events and session state so `/chat/[id]` can resume the same durable conversation after refresh.
