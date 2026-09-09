@@ -8,3 +8,4 @@ Open-source eve agent templates.
 | Slack Agent | [`eve-slack-agent-template`](./eve-slack-agent-template) | [vercel-labs/eve-slack-agent-template](https://github.com/vercel-labs/eve-slack-agent-template) | `bb35e1f` |
 | Chat Template | [`eve-chat-template`](./eve-chat-template) | [vercel-labs/eve-chat-template](https://github.com/vercel-labs/eve-chat-template) | `4792ac1` |
 | LLM Council | [`eve-llm-council-template`](./eve-llm-council-template) | [vercel-labs/eve-llm-council](https://github.com/vercel-labs/eve-llm-council) | `b591cd7` |
+| Conversational Discord Agent | [`eve-conversational-discord-agent-template`](./eve-conversational-discord-agent-template) | [benpankow/vercel-discord-gateway-relay](https://github.com/benpankow/vercel-discord-gateway-relay) | `002dfce` |

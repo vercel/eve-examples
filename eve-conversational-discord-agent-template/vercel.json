@@ -1,0 +1,42 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "relay": {
+      "root": "services/relay",
+      "framework": "nitro",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "eve",
+          "format": "url",
+          "env": "EVE_SERVICE_URL"
+        }
+      ]
+    },
+    "eve": {
+      "root": "services/eve",
+      "framework": "eve",
+      "buildCommand": "eve build"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/relay/(.*)",
+      "destination": {
+        "service": "relay"
+      }
+    },
+    {
+      "source": "/eve/(.*)",
+      "destination": {
+        "service": "eve"
+      }
+    }
+  ],
+  "crons": [
+    {
+      "path": "/relay/supervise",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}
