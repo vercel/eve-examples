@@ -27,13 +27,27 @@ EVE_CHAT_PASSWORD=
 
 Use a strong value; 16+ characters are recommended. The app exchanges it for a secure, HTTP-only session cookie. Chats and eve session cursors are stored in the current browser's localStorage, so history does not follow the user to another browser.
 
-The deploy button does not provision storage for long-term memory. The agent runs normally, but memory is disabled on Vercel until you set up Blob storage below.
+The deploy button does not provision storage for long-term memory. The agent runs normally, but memory is disabled on Vercel until you complete [Long-Term Memory](#long-term-memory). That step works in starter mode and does not require the production upgrade.
 
 Starter mode is for one trusted operator. Everyone who knows the password shares
 the same eve principal and any user-scoped connection grants. Upgrade to
 production mode before giving independent users access.
 
 If `EVE_CHAT_PASSWORD` is absent and the full production environment is not configured, the deployment fails closed and does not allow chat requests.
+
+## Long-Term Memory
+
+`agent/memory/profile.ts` gives the agent a small, model-maintained document of durable facts and preferences per eve principal. In starter mode every password holder shares one document; in production mode each signed-in user has their own. Memory is optional in every mode.
+
+On Vercel the slot stays disabled, and the agent has no memory tools, until a private Blob store is connected. Link the project (see [Local Project Link](#local-project-link)) and run:
+
+```bash
+pnpm exec eve integration setup file-memory --yes
+```
+
+The command creates or reuses a private Vercel Blob store, connects it to Production, Preview, and Development with OIDC, and pulls the `EVE_MEMORY_BLOB_*` environment variables into `.env.local`. Blob usage may incur charges. Redeploy after running it; environment changes apply to new deployments only. The setup script below runs the same command.
+
+This template enables memory only from the `EVE_MEMORY_BLOB_*` variables. A store you attach manually with the generic `BLOB_*` variables is ignored, so memory never takes over an application's own Blob store. In local development eve keeps memory in process and it resets when the dev server restarts.
 
 ## Production Persistence Upgrade
 
@@ -66,15 +80,7 @@ vercel link --scope <team-slug>
 
 ## Production Storage
 
-The setup script provisions the required storage. To configure long-term memory separately, link the project and run:
-
-```bash
-pnpm exec eve integration setup file-memory --yes
-```
-
-The command creates or reuses a private Vercel Blob store, connects it to Production, Preview, and Development, and pulls `EVE_MEMORY_BLOB_*` environment variables into `.env.local`. Blob usage may incur charges. Redeploy after running it.
-
-Neon and Upstash Redis are required only for production mode.
+The setup script provisions the required storage, including the Blob store described in [Long-Term Memory](#long-term-memory). Neon and Upstash Redis are required only for production mode.
 
 Provision Neon:
 

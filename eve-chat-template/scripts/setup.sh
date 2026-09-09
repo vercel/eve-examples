@@ -110,8 +110,16 @@ provision_integration() {
 }
 
 # --- 3. Provision required storage ------------------------------------------
+# Long-term memory is optional and independent of the other storage. Skip it
+# when the store is already connected, and never let a failure here block the
+# Neon, Upstash, and Sign in with Vercel steps below.
 step "Provisioning private file memory"
-pnpm exec eve integration setup file-memory --yes
+if vercel env ls $SCOPE_FLAGS 2>/dev/null | grep -q 'EVE_MEMORY_BLOB_STORE_ID'; then
+  echo "  EVE_MEMORY_BLOB_STORE_ID already present, skipping"
+elif ! pnpm exec eve integration setup file-memory --yes; then
+  warn "Could not set up file memory. Long-term memory stays disabled on Vercel."
+  warn "Re-run 'pnpm exec eve integration setup file-memory' later to enable it."
+fi
 
 step "Provisioning Neon Postgres"
 provision_integration "Neon" neon DATABASE_URL

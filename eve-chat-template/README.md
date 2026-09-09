@@ -1,6 +1,6 @@
 # eve Chat Template
 
-A Next.js chat template for [eve](https://eve.dev) that starts with password access and browser-persisted chats, then upgrades to per-user durable memory, Sign in with Vercel, Neon, and Upstash when you need a production multi-user application.
+A Next.js chat template for [eve](https://eve.dev) that starts with password access and browser-persisted chats, then upgrades to durable memory, Sign in with Vercel, Neon, and Upstash when you need a production multi-user application.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-description=A%20persisted%20Next.js%20chat%20template%20for%20eve%2C%20built%20with%20shadcn%2Fui%2C%20Tailwind%20CSS%2C%20Streamdown%2C%20Better%20Auth%2C%20Drizzle%2C%20and%20Neon.&demo-image=https%3A%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2FYXYTquqpBmvVFbASdIvrC%2Fbb50d21ba7866882d90e25d842b6fc02%2Feve-chat-no-bg.png&demo-title=eve%20Chat%20Template&demo-url=https%3A%2F%2Fchat.eve.dev&env=EVE_CHAT_PASSWORD&envDescription=Choose%20a%20strong%20password%20to%20protect%20your%20agent%20%2816%2B%20characters%20recommended%29.&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Fblob%2Fmain%2Feve-chat-template%2Fdocs%2Fsetup-and-deploy.md&from=templates&project-name=eve%20Chat%20Template&repository-name=eve-chat-template&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Feve-examples%2Ftree%2Fmain%2Feve-chat-template)
 
@@ -12,7 +12,7 @@ Deploy the starter without provisioning a database or other Marketplace products
 2. Enter a strong `EVE_CHAT_PASSWORD` (16+ characters recommended).
 3. Open the deployed app and enter that password.
 
-Chats and eve session cursors are stored in that browser. They are not shared across browsers or users. The starter does not enable cross-session long-term memory in Vercel until you set up Blob storage.
+Chats and eve session cursors are stored in that browser. They are not shared across browsers or users. The starter does not enable cross-session long-term memory on Vercel until you set up Blob storage; see [Long-Term Memory](docs/setup-and-deploy.md#long-term-memory).
 
 Starter mode is intended for one trusted operator: anyone with the password
 shares the same agent identity and connection grants.
@@ -131,7 +131,7 @@ pnpm dev
 - Optional Better Auth sign-in with Vercel
 - Optional Neon-backed cross-device chat history
 - Optional Upstash Redis rate limiting in production mode
-- Per-user long-term memory in a private Vercel Blob document after setup
+- Optional long-term memory in a private Vercel Blob document (per user in production mode)
 - Drizzle schema and migrations for production mode under `lib/db`
 - Saved eve session cursors and event snapshots in either storage mode
 - Sidebar history with delete and new-chat actions

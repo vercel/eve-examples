@@ -89,9 +89,10 @@ Do not treat those indices as interchangeable.
 
 Long-term memory is separate from both app-chat persistence and eve session
 history. `agent/memory/profile.ts` scopes a bounded, model-maintained document
-to the authenticated eve principal. On Vercel, the slot stays disabled until
-`EVE_MEMORY_BLOB_STORE_ID` is configured; the setup script provisions that
-private Blob store. In local development, eve uses process-local memory.
+to the authenticated eve principal. On Vercel, the slot stays disabled until an
+`EVE_MEMORY_BLOB_*` store is configured; generic `BLOB_*` variables are
+intentionally ignored. The setup script provisions that private Blob store. In
+local development, eve uses process-local memory.
 
 ## Rendering Strategy
 
