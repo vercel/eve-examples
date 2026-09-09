@@ -1,6 +1,6 @@
 # Setup and Deployment
 
-This guide covers the database-free starter, local development, the production persistence upgrade, Sign in with Vercel, and optional connections.
+This guide covers the database-free starter, local development, long-term memory, the production persistence upgrade, Sign in with Vercel, and optional connections.
 
 ## Prerequisites
 
@@ -27,6 +27,8 @@ EVE_CHAT_PASSWORD=
 
 Use a strong value; 16+ characters are recommended. The app exchanges it for a secure, HTTP-only session cookie. Chats and eve session cursors are stored in the current browser's localStorage, so history does not follow the user to another browser.
 
+The deploy button does not provision storage for long-term memory. The agent runs normally, but memory is disabled on Vercel until you set up Blob storage below.
+
 Starter mode is for one trusted operator. Everyone who knows the password shares
 the same eve principal and any user-scoped connection grants. Upgrade to
 production mode before giving independent users access.
@@ -35,7 +37,7 @@ If `EVE_CHAT_PASSWORD` is absent and the full production environment is not conf
 
 ## Production Persistence Upgrade
 
-Configure all of Neon, Upstash, and Sign in with Vercel to switch the same codebase into production mode. Production mode uses Vercel identity, database-backed per-user history, and distributed rate limiting. The setup script automates this path:
+Configure Vercel Blob, Neon, Upstash, and Sign in with Vercel to switch the same codebase into production mode. Production mode uses Vercel identity, per-user long-term memory in private Blob storage, database-backed per-user history, and distributed rate limiting. The setup script automates this path:
 
 ```bash
 ./scripts/setup.sh
@@ -63,6 +65,14 @@ vercel link --scope <team-slug>
 ```
 
 ## Production Storage
+
+The setup script provisions the required storage. To configure long-term memory separately, link the project and run:
+
+```bash
+pnpm exec eve integration setup file-memory --yes
+```
+
+The command creates or reuses a private Vercel Blob store, connects it to Production, Preview, and Development, and pulls `EVE_MEMORY_BLOB_*` environment variables into `.env.local`. Blob usage may incur charges. Redeploy after running it.
 
 Neon and Upstash Redis are required only for production mode.
 
