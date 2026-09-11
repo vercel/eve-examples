@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repository is deprecated. The templates now live in the [eve repository](https://github.com/vercel/eve/tree/main/apps/templates).
+
 # eve-examples
 
 Open-source eve agent templates.
