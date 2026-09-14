@@ -1,7 +1,0 @@
-minimumReleaseAgeExclude:
-  - "@ai-sdk/*"
-  - "@vercel/*"
-  - "@workflow/*"
-  - ai
-  - eve
-  - workflow
